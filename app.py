@@ -1,4 +1,6 @@
 import streamlit as st
+from pycbrf import ExchangeRates
+
 from constants import *
 
 from customs_funcs import util_fizik, poshlina, tamozh_sbor, to_currency
@@ -53,6 +55,11 @@ if not is_ok_paranetrs:
     st.stop()
 expander_result = st.expander('Расчет таможенных платжей', expanded=is_ok_paranetrs)
 with expander_result:
+    rates = ExchangeRates()
+    USD = float(rates['USD'].rate)
+    EUR = float(rates['EUR'].rate)
+    KRW = float(rates['KRW'].rate)
+    KRW_PRIM = KRW + (KRW * 0.05)
     st.text(f'Для расчета были использованы следующие курсы валют: \n'
             f'USD - {round(USD,2)} руб. (1$)\n'
             f'EUR - {round(EUR,2)} руб. (1€) \n'
@@ -133,5 +140,5 @@ with expander_russia:
     s = f'Комиссия компании: {to_currency(KOMISSIYA_OF_COMPAMY)} руб.\n' \
         f'Физик (физическое лицо для растаможки авто): {to_currency(FIZIK_TAMOZHNYA)} руб. \n' \
         f'СВХ (склад временного хранения): {SVH} \n' \
-        f'Мойка, перегон, и дргуая подготовка (если необходимо).'
+        f'Мойка, перегон, и другая подготовка (если необходимо).'
     st.text(s)
